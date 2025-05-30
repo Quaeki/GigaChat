@@ -39,23 +39,7 @@ fun ChatScreen(viewModel: ChatViewModel) {
     val state = viewModel.state.value
     val listState = rememberLazyListState()
     val chatHistory = remember {
-        mutableStateOf(
-            listOf(
-                ChatHistoryItem(1, "ChatGPT", false),
-                ChatHistoryItem(2, "Обзор GPT", false),
-                ChatHistoryItem(3, "Сегодня", true),
-                ChatHistoryItem(4, "Использование Modifier.align", false),
-                ChatHistoryItem(5, "Вчера", true),
-                ChatHistoryItem(6, "Базис многоленов P2", false),
-                ChatHistoryItem(7, "3 дня назад", true),
-                ChatHistoryItem(8, "Нагруженность поля между загру...", false),
-                ChatHistoryItem(9, "4 дня назад", true),
-                ChatHistoryItem(10, "Получение API и цены", false),
-                ChatHistoryItem(11, "6 дней назад", true),
-                ChatHistoryItem(12, "Система стрека C++", false),
-                ChatHistoryItem(13, "Обучение против класса C++", false)
-            )
-        )
+        mutableStateOf(emptyList<ChatHistoryItem>()) // История чата очищена
     }
     val selectedChat = remember { mutableStateOf<ChatHistoryItem?>(null) }
     val isHistoryVisible = remember { mutableStateOf(false) }
@@ -70,7 +54,7 @@ fun ChatScreen(viewModel: ChatViewModel) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black) // Полностью черный фон
+            .background(Color.Black)
             .systemBarsPadding()
     ) {
         Column(
@@ -115,7 +99,7 @@ fun ChatScreen(viewModel: ChatViewModel) {
                     .background(Color.Black),
                 state = listState,
                 contentPadding = PaddingValues(vertical = 8.dp),
-                reverseLayout = true // Сообщения снизу вверх
+                reverseLayout = true
             ) {
                 items(state.messages) { message ->
                     Column(
@@ -126,14 +110,14 @@ fun ChatScreen(viewModel: ChatViewModel) {
                         if (message.userMessage.isNotEmpty()) {
                             Box(
                                 modifier = Modifier
-                                    .align(Alignment.End) // Сообщения пользователя справа
+                                    .align(Alignment.End)
                                     .background(
-                                        Color.DarkGray, // Прозрачный фон
+                                        Color.DarkGray,
                                         RoundedCornerShape(8.dp)
                                     )
                                     .border(
                                         1.dp,
-                                        Color.Transparent, // Белая обводка
+                                        Color.Transparent,
                                         RoundedCornerShape(8.dp)
                                     )
                                     .padding(16.dp)
@@ -149,14 +133,14 @@ fun ChatScreen(viewModel: ChatViewModel) {
                         if (message.aiResponse.isNotEmpty()) {
                             Box(
                                 modifier = Modifier
-                                    .align(Alignment.Start) // Сообщения бота слева
+                                    .align(Alignment.Start)
                                     .background(
-                                        Color.DarkGray, // Прозрачный фон
+                                        Color.DarkGray,
                                         RoundedCornerShape(8.dp)
                                     )
                                     .border(
                                         1.dp,
-                                        Color.Transparent, // Белая обводка
+                                        Color.Transparent,
                                         RoundedCornerShape(8.dp)
                                     )
                                     .padding(16.dp)
@@ -246,7 +230,7 @@ fun ChatScreen(viewModel: ChatViewModel) {
                 modifier = Modifier
                     .width(280.dp)
                     .fillMaxHeight()
-                    .background(Color.Black) // Темно-серый фон
+                    .background(Color.Black)
                     .padding(16.dp)
             ) {
                 // Верхняя часть с "Поиск" и иконкой закрытия
@@ -259,7 +243,7 @@ fun ChatScreen(viewModel: ChatViewModel) {
                 ) {
                     Text(
                         text = "Поиск",
-                        color = Color(0xFF8E8E9E), // Серый цвет
+                        color = Color(0xFF8E8E9E),
                         fontSize = 16.sp
                     )
                     IconButton(
@@ -299,7 +283,7 @@ fun ChatScreen(viewModel: ChatViewModel) {
                                 )
                                 Text(
                                     text = chat.title,
-                                    color = Color(0xFF8E8E9E), // Серый цвет для меток
+                                    color = Color(0xFF8E8E9E),
                                     fontSize = 14.sp,
                                     modifier = Modifier.padding(horizontal = 8.dp)
                                 )
@@ -319,7 +303,7 @@ fun ChatScreen(viewModel: ChatViewModel) {
                                     .clip(RoundedCornerShape(8.dp))
                                     .background(
                                         if (selectedChat.value?.id == chat.id) {
-                                            Color(0xFF2A2A2A) // Выбранный чат
+                                            Color(0xFF2A2A2A)
                                         } else {
                                             Color.Transparent
                                         }
@@ -329,12 +313,29 @@ fun ChatScreen(viewModel: ChatViewModel) {
                             ) {
                                 Text(
                                     text = chat.title,
-                                    color = Color.White, // Белый цвет для названий чатов
+                                    color = Color.White,
                                     fontSize = 16.sp
                                 )
                             }
                         }
                     }
+                }
+
+                // Кнопка для очистки истории
+                Button(
+                    onClick = {
+                        chatHistory.value = emptyList()
+                        selectedChat.value = null
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFFF4D4D),
+                        contentColor = Color.White
+                    )
+                ) {
+                    Text("Очистить историю")
                 }
 
                 // Нижняя часть с аватаром и именем
