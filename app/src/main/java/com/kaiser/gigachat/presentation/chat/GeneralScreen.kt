@@ -130,6 +130,9 @@ fun ChatScreen(viewModel: ChatViewModel) {
                                 )
                             }
                         }
+                        if (message.userMessage.isNotEmpty() && message.aiResponse.isNotEmpty()) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
                         if (message.aiResponse.isNotEmpty()) {
                             Box(
                                 modifier = Modifier
@@ -179,13 +182,6 @@ fun ChatScreen(viewModel: ChatViewModel) {
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = { /* Действие */ }) {
-                    Icon(
-                        imageVector = Icons.Rounded.Build,
-                        contentDescription = "Image",
-                        tint = Color.White
-                    )
-                }
                 BasicTextField(
                     value = state.inputText,
                     onValueChange = { viewModel.onMessageInputChanged(it) },

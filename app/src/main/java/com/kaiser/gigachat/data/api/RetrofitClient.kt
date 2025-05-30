@@ -18,12 +18,13 @@ object RetrofitClient {
         this.context = context
         customApiKey?.let { apiKey = it }
     }
-//    "https://hubai.loe.gg/v1/"
-//    "sk-7i4TMEleBLe4wiXU5WD2-A"
     val chatApi: ChatApi by lazy { createRetrofit().create(ChatApi::class.java) }
 
     private fun createRetrofit(): Retrofit {
         val okHttpClient = OkHttpClient.Builder()
+            .connectTimeout(60, java.util.concurrent.TimeUnit.SECONDS)
+            .readTimeout(60, java.util.concurrent.TimeUnit.SECONDS)
+            .writeTimeout(60, java.util.concurrent.TimeUnit.SECONDS)
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })
